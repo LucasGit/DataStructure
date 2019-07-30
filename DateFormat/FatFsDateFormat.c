@@ -7,6 +7,15 @@
 #define TIME_DATE_STR_BUF_LEN 	10
 #define FAT_FS_YEAR_BASE		1980
 
+
+/*	fatfs FILINFO fdate
+	Indicates the date that the file was modified or the directory was created.
+	bit15:9
+	Year origin from 1980 (0..127)
+	bit8:5
+	Month (1..12)
+	bit4:0
+	Day (1..31)*/
 #define FAT_FS_DATE_MASK_YEAR 	0xFE00
 #define FAT_FS_DATE_MASK_MONTH  0x01E0
 #define FAT_FS_DATE_MASK_DAY	0x001F
@@ -19,6 +28,14 @@
 #define FAT_FS_MONTH_VAL(Date) 	((Date & FAT_FS_DATE_MASK_MONTH) >> FAT_FS_DATE_MONTH_OFFSET)
 #define FAT_FS_DAY_VAL(Date) 	((Date & FAT_FS_DATE_MASK_DAY)   >> FAT_FS_DATE_DAY_OFFSET)
 
+/**  fatfs FILINFO ftime
+	Indicates the time that the file was modified or the directory was created.
+	bit15:11
+	Hour (0..23)
+	bit10:5
+	Minute (0..59)
+	bit4:0
+	Second / 2 (0..29)*/
 #define FAT_FS_TIME_MASK_HOUR 	0xF800
 #define FAT_FS_TIME_MASK_MIN 	0x07E0
 #define FAT_FS_TIME_MASK_SEC	0x001F
@@ -40,15 +57,7 @@ void DateFormatToStr(unsigned int Date,char *pDate,unsigned int DateBufLen)
 	{
 		return;
 	}
-	
-	/*  fatfs FILINFO fdate
-		Indicates the date that the file was modified or the directory was created.
-		bit15:9
-		Year origin from 1980 (0..127)
-		bit8:5
-		Month (1..12)
-		bit4:0
-		Day (1..31)*/
+
 	if(0 == Date)
 	{
 		pDate[0] = '0';
@@ -76,14 +85,6 @@ void TimeFormatToStr(unsigned int Time,char *pTime,unsigned int TimeBufLen)
 		return;
 	}
 		
-	/**  fatfs FILINFO ftime
-		Indicates the time that the file was modified or the directory was created.
-		bit15:11
-		Hour (0..23)
-		bit10:5
-		Minute (0..59)
-		bit4:0
-		Second / 2 (0..29)*/
 	if(0 == Time)
 	{
 		pTime[0] = '0';
