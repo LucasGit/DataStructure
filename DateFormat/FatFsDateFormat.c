@@ -1,9 +1,36 @@
 #include "FatFsDateFormat.h"
 
 
-/** fatfs FILINFO Link: http://www.elm-chan.org/fsw/ff/pf/sfileinfo.html */
+/** fatfs FILINFO 
+	Link: http://www.elm-chan.org/fsw/ff/pf/sfileinfo.html */
 
-#define TIME_DATE_STR_BUF_LEN 10
+#define TIME_DATE_STR_BUF_LEN 	10
+#define FAT_FS_YEAR_BASE		1980
+
+#define FAT_FS_DATE_MASK_YEAR 	0xFE00
+#define FAT_FS_DATE_MASK_MONTH  0x01E0
+#define FAT_FS_DATE_MASK_DAY	0x001F
+
+#define FAT_FS_DATE_YEAR_OFFSET  9
+#define FAT_FS_DATE_MONTH_OFFSET 5
+#define FAT_FS_DATE_DAY_OFFSET	 0
+
+#define FAT_FS_YEAR_VAL(Date) (((Date & FAT_FS_DATE_MASK_YEAR)   >> FAT_FS_DATE_YEAR_OFFSET) + FAT_FS_YEAR_BASE)
+#define FAT_FS_MONTH_VAL(Date) 	((Date & FAT_FS_DATE_MASK_MONTH) >> FAT_FS_DATE_MONTH_OFFSET)
+#define FAT_FS_DAY_VAL(Date) 	((Date & FAT_FS_DATE_MASK_DAY)   >> FAT_FS_DATE_DAY_OFFSET)
+
+#define FAT_FS_TIME_MASK_HOUR 	0xF800
+#define FAT_FS_TIME_MASK_MIN 	0x07E0
+#define FAT_FS_TIME_MASK_SEC	0x001F
+
+#define FAT_FS_TIME_HOUR_OFFSET  11
+#define FAT_FS_TIME_MIN_OFFSET 	 5
+#define FAT_FS_TIME_SEC_OFFSET	 0
+
+#define FAT_FS_HOUR_VAL(Time) 	((Time & FAT_FS_TIME_MASK_HOUR) >> FAT_FS_TIME_HOUR_OFFSET)
+#define FAT_FS_MIN_VAL(Time) 	((Time & FAT_FS_TIME_MASK_MIN)  >> FAT_FS_TIME_MIN_OFFSET)
+#define FAT_FS_SEC_VAL(Time) 	((Time & FAT_FS_TIME_MASK_SEC)  >> FAT_FS_TIME_SEC_OFFSET)
+
 
 void DateFormatToStr(unsigned int Date,char *pDate,unsigned int DateBufLen)
 {
@@ -29,10 +56,9 @@ void DateFormatToStr(unsigned int Date,char *pDate,unsigned int DateBufLen)
 		return;
 	}
 	
-	unsigned short  Year  =  (Date & 0xFE00) >> 9;
-					Year += 1980;
-	unsigned short	Month =  (Date & 0x01E0) >> 5;
-	unsigned short	Day   =  (Date & 0x001F) >> 0;;
+	unsigned short  Year  =  FAT_FS_YEAR_VAL(Date);
+	unsigned short	Month =  FAT_FS_MONTH_VAL(Date);
+	unsigned short	Day   =  FAT_FS_DAY_VAL(Date);
 
 	if(DateBufLen > 8)
 	{
@@ -65,9 +91,9 @@ void TimeFormatToStr(unsigned int Time,char *pTime,unsigned int TimeBufLen)
 		return;
 	}
 	
-	unsigned short  Hour  	=  (Time & 0xF800) >> 11;
-	unsigned short	Minute 	=  (Time & 0x07E0) >> 5;
-	unsigned short	Second  =  (Time & 0x001F) >> 0;;
+	unsigned short  Hour  	=  FAT_FS_HOUR_VAL(Time);
+	unsigned short	Minute 	=  FAT_FS_MIN_VAL(Time);
+	unsigned short	Second  =  FAT_FS_SEC_VAL(Time);;
 
 	if(TimeBufLen > 6)
 	{
