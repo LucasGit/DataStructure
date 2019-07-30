@@ -46,7 +46,7 @@
 
 #define FAT_FS_HOUR_VAL(Time) 	((Time & FAT_FS_TIME_MASK_HOUR) >> FAT_FS_TIME_HOUR_OFFSET)
 #define FAT_FS_MIN_VAL(Time) 	((Time & FAT_FS_TIME_MASK_MIN)  >> FAT_FS_TIME_MIN_OFFSET)
-#define FAT_FS_SEC_VAL(Time) 	((Time & FAT_FS_TIME_MASK_SEC)  >> FAT_FS_TIME_SEC_OFFSET)
+#define FAT_FS_SEC_VAL(Time) 	(((Time & FAT_FS_TIME_MASK_SEC)  >> FAT_FS_TIME_SEC_OFFSET) * 2)
 
 
 void DateFormatToStr(unsigned int Date,char *pDate,unsigned int DateBufLen)
